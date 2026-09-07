@@ -136,6 +136,101 @@ catalog - dbt
 schema - source
 tables - refer source folder
 
+Now, we will use dbt for transformation.
+
+Lets start building models and initilaize dbt connection with databricks.
+1. Project
+2. Connection
+
+Whenever you are using dbt cloud, all these things will be turned into nice UI.
+# dbt command
+dbt init
+# enter a name for you project
+dbt_priya 
+> creates new folder with the given name, logs
+# databricks or spark
+1
+# host name of databricks
+SQL datawarehouse > connection details > hostname, http path
+
+DBT will be using SQL warehouse 
+
+ # access token 
+ 1
+ # create a new token in databricks
+ settings > developer > access tokens > generate new token > copy it
+ # paste it in vs code
+
+ # use unity catalog or no?
+ 1
+ # catalog name?
+ dbt
+ #schema
+ can type default, we will change the schema
+ # thread
+ 1
+
+ connection is established
+
+ 2nd dbt command
+ # dbt debug
+
+ # it says 1 check failed
+ project.yml not found
+
+ We are at parent folder but dbt project is present in project folder created
+ cd priya_dbt_project
+
+ # check dbt debug
+ dbt debug
+
+ # all checks passed
+
+ One last things
+ You see Using Profiles.yml file at c:\Users\priya\.dbt\profiles.yml
+ Profile created for us and most important file for dbt core.
+ Without this you cannot do anything.
+
+ In this profiles.yml - yaml file all the connection details, tokens everything written.
+ Q. Why created in c drive instead of project folder?
+ by default it creates in project folder location also.
+ We can anytime copy that file into that project folder.
+ Whenever we run a dbt command - It first checks project folder and later c also.
+
+ Ideally as a good developer, you should provide that file in the project folder.
+
+ Lets explore project folder (DBT) - folder structure that we follow in dbt
+ 1. analyses
+ 2. logs
+ 3. macros
+ 4. models
+ 5. seeds
+ 6. snapshots
+ 7. tests
+ 8. .gitignore
+ 9. dbt_project.yml
+ 10. README.md
+ 
+
+ NOTE: in dbt core whatever you do, you need to provide the metadata in dbt_project.yml 
+ backbone of dbt core, whatever we provide here. it will go to that location and perform the stuff
+
+ ex: model-paths: ["models"] models folder
+
+ yml or yaml file - aint markup language or yet another markup language
+ Format in that is YAML
+ we cannot pick that format because we will be using JINJA templates.
+ By default YAML Doesn't know, what is jinja template within yaml
+ We need to tell it - we have many ways
+ best way is: when doing local development that is dbt power or power user for dbt
+
+ Q) what Power User extension does? makes coding better, auto complete your code, suggestions, lineage
+ build graphs, build dags 
+ all the features that are available in dbt cloud.
+
+ click on dbt core button on vs code 
+ 
+ 
 
 
 
