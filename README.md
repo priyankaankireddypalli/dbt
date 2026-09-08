@@ -228,7 +228,56 @@ DBT will be using SQL warehouse
  build graphs, build dags 
  all the features that are available in dbt cloud.
 
- click on dbt core button on vs code 
+ click on dbt core button on vs code (left corner)
+ select set up extension
+ 1. select python Interpreter
+ 2. Associated File Types (*.sql files needs to be associated with the value 'sql' or 'jinja-sql', *.yml file types should be associated with the value 'yaml' or 'jinja-yaml')
+    > add Item - *.sql - jinja-sql
+    > add Item - *.yml - jinja-yaml
+    > ok
+
+3. run dbt setups
+4. finish setup
+
+material icon theme extension
+
+copy the file from c drive profiles (C:\Users\lohit\.dbt\profiles.yml) to this dbt project root
+
+in dbt_project.yml -
+You need to make sure that the profile is not set up as default.
+It should be same name as your project and also in profiles.yml it should have same value 'priya_dbt_project'
+It should be matching
+
+
+let create a simple model
+models folder - favourite folder 
+
+we will create a medallian architecture
+folders - 
+models folder > bronze
+              > silver
+              > gold
+              > source
+
+We know that we want to populate the bronze layer
+In bronze, we populate the data from the source as is
+
+Simple code 
+lets create a file > bronze_sales.sql
+
+actually you want to create a bronze table in databricks
+Q. I am in dbt, how can i create it?
+No need to use CREATE TABLE syntax
+Just select * from tablename
+
+
+
+
+
+Lets go to databricks > source
+
+
+
  
  
 
