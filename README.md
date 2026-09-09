@@ -270,11 +270,209 @@ Q. I am in dbt, how can i create it?
 No need to use CREATE TABLE syntax
 Just select * from tablename
 
+you can see lineage
+
+dynamic sources using source property - sources.yml
+you should use name and schema equivalent
+SELECT
+    *
+FROM
+ {{ source('source','fact_sales')}}
+
+ adv of using source will show in the lineage from where the data came from
+
+ In dbt_project.yml - Whatever we have in bronze folder it will create a views in databricks. You can also create tables
+ +materialized: view/table
+
+ This is just one kind of configuration.
+ We can define configuration in multiple areas.
+
+ To run this, go to terminal > go to dbt project folder > and write command
+ # dbt run
+
+ It creates a target folder whenever you run the models or compile the models
+
+ Whenever you are writing very complex query, which query is actually used to create our models (you can see run)
+ real query run behind the dbt models to populate the data in databricks.
+
+
+ Note: when models are deleted, target will still hold the models execution query. 
+ it creates grabage. We need to clean it
+ we have a command # dbt clean
+
+
+ Configurations in dbt are import
+ configurations can be configured in three different areas in dbt
+1. dbt_project.yml - way to tell dbt how we want to run the models, how we want to materialised, where we want to materialised
+2. properties
+3. block
+
+   priority?
+   block > properties > dbt_project
+
+property file - can hold your data tests, lot more also define configs
+You can define your property files in your models and are of yaml format.
+
+block level - 
+
+{{ config(
+    materialized='view'
+)}}
+
+SELECT 
+    *
+FROM
+    {{ source('source','fact_sales')}}
+
+
+ 
+ 
+properties.yml
+version: 2
+models:
+  - name: bronze_date #  Must match the filename of a model -- including case sensitivity.
+    config:
+        materialized: view
+
+  - name: bronze_product
+    config:
+        materialized: view
+
+
+Different schemas for different layers
+
+profiles target or can configure it in your block or properties file or dbt_project as well.
+It makes sense to add it in dbt_project.yml file + macro also should be used (generate_schema)
+
+You need to add macro also
+Lets understand how dbt creates schema by dbt
+There is macro called generate_schema_name for custom schema
+
+
+
+NODE SELECTION IN DBT
+
+Every time we write dbt run
+sometimes i dont want to run all the models
+only one or two models
+dbt run --select bronze_date
+
+multiple models
+dbt run --select "bronze_date bronze_store"
+
+
+Run only bronze folder
+dbt run --select "models/bronze/"
+
+
+DATA TESTS along with this we will be introduced to dbt packages
+Data tests & dbt packages
+
+DBT TESTS (game changing thing) - Templating format and so many 
+We usually validate before we are building anything
+
+ex: deduplication is one of those things that you cannot negatiote
+
+So dbt test is a way to add rules or expectations or criteria or validation or checks using dbt test module
+
+DBT TESTS - we have multiple types of dbt tests
+
+data tests can be applied on models, seeds and snapshots as well
+
+1. Generic tests - This apply validation check (generally used in all solutions) [not null, unique, accepted values, relationship] always add generic tests in properties files (on specific columns - in specific model)
+   # dbt test
+2. singular tests - are one step ahead ( singular test as logical test - tests build for KPI's, business), tests folder > it will be treated it as a singular tests.
+   Any sql statement you want to run a tests (negative value not allowed - ex: price)
+   ref functions is an abreavation for reference, so we are using source objects using source
+   ref function models from bronze layer {{ ref('bronze_sales')}}
+3.  Custom Generic Tests -
+   you need to create custom generic test you need use test folder
+tests/generic/
+
+non negative test - pre build your generic test and it will be customized one and use same way as other generic tests
+macros are equivalent to functions in python
+
+define it in properties.yml file but no need to include parameters, it is sent autoamtically
+
+DBT SEEDS? simple and handy
+Have you ever worked with lookup files or lookup tables or mapping files or mapping tables
+same thing in dbt 
+
+lets say mapping tables - parameters
+
+ex: mapping table for categories 
+
+Steps: create a csv files and it will be used to create your mapping table in your desired schema and catalog.
+
+# dbt seed - creates in default catalog and schema
+so mention catalog and schema in dbt_project.yml
+
+can refer the seed, same way we refer the models using ref
+
+What is analyses folder?
+You want to run one sql query but you dont want to include it in building of project or objects.
+I still want a folder where i want to just quick run.
+
+
+
+JINJA AND MACROS
+power of dbt - jinja (can make templates)
+JINJA Templating framework 
+You need to install libraires and interpreter will render it.
+
+JINJA in real world
+adding programming capability on top of sql
+
+when defining something we use {% %}
+variables: {% set var_name = 'Priyanka'  %}
+
+- is used to remove spaces when displaying
+{%- set var_name = 'Priyanka'  -%}
+
+{{- var_name -}}
+
+{% for i in iterable %}
+    {{ i }}
+{% endfor %}
+
+if - 
+{% if i == 'value' %}
+    {{ i }}
+ {% else %}
+  {{ i }} not my favourite
+ {% endif %}
+
+ 
+
+Incrementally load the data from the bronze model (ex: bronze_sales)
+
+In the real world, we don not create two different processesing notebooks for initial and incremental run.
+
+In single notebook only we would like to process initial and incremental run using a flag.
+We create a kind of init_flag = 0
+
+SELECT
+    *
+FROM 
+    {{ ref('bronze_sales')}}
+
+{% if inc_flag == 0 %}
+    1 == 1
+{% endif %}
 
 
 
 
-Lets go to databricks > source
+MACROS IN JINJA
+
+
+
+
+
+
+
+
+
 
 
 
