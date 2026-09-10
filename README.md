@@ -465,6 +465,78 @@ FROM
 
 MACROS IN JINJA
 
+macros are equivalent to functions in any prog lang.
+Can re-use the logic.
+
+recommended: always use filename and macro name same for better code management
+
+{% macro functionname(para1,para2) %}
+   {{ col1 }} * {{ col2}}
+{% endmacro %}
+
+
+Silver layer
+OBT per entity (like finance, retail,...)
+
+
+DBT snapshots - to work with slowly changing dimensions
+snapshot are created so we can work with slowly changing dimensions using dbt.
+One of the most important task of DE - is to create a scd's 
+scd1 is easy (simple upsert)
+scd2 is bit challenging (we need to keep track of the history as well) - good news is with the help of snapshots it makes it little easy
+
+YAML files are used to directly create snapshots.
+When we are working with scd make sure to have date column,
+
+to understand snapshot
+Lets create a table in databricks
+create a query > table and insert values
+
+
+In dbt, create a yaml file in snapshot folder
+
+Ideally: We should always create a dedicated source for the snapshots.
+Reason - in source, you will be finding trouble to define the primary key.
+Why? 
+Lets say you have source - item1, item2, item3
+i have changed item3 to item3_new and primary key is still 3.
+
+In source - we need to dedup the data and picks up only the latest data
+and pass that data to scd's on snapshot, we will manage the history.
+
+define it in source.yml (newly created table)
+
+It will be the upstream for gold_items.yml file. it will do something populated something and stored in gold folder
+
+They are two different strategy in industry 
+1. Timestamp (recommended)
+2. check
+
+   snapshots:
+  - name: gold_items
+    relation: ref('source_gold_items')
+    config:
+      schema: gold
+      database: dbt
+      unique_key: id
+      strategy: timestamp
+      updated_at: updateDate
+      dbt_valid_to_current: "to_date('9999-12-31')" # Specifies that current records should have `dbt_valid_to` set to `'9999-12-31'` instead of `NULL`.
+
+to populate this particular snapshot > use command
+# dbt snapshot
+
+-- can use command dbt build (to run everything)
+command used to orchestrate our dbt pipeline
+also for deployment (with little tweak)
+
+after adding new record test it
+run dbt build
+
+
+
+
+
 
 
 
